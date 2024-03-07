@@ -192,7 +192,11 @@ According to our analysis, we can get the model：
 $$ {Qualityclass\_binary}_i = \beta_0 + \beta_1 \cdot{characteristics}_i + \beta_2  \cdot{altitude\_mean\_meters}_i + \varepsilon_i $$
 
 where
+
 1. the intercept$\beta_0$ is the expected value of ${Qualityclass\_binary}_i$,when all independent variables are zero.
+
 2. $\beta_1  \cdot {characteristics}_i$ is This term represents the effect of the $i_th$observation's characteristics on the quality class.
+
 3. $\beta_2  \cdot {altitude\_mean\_meters}_i$ is the effect of the $i_th$ observation's average altitude (measured in meters) on the quality class.
+
 4. $\varepsilon_i$ is unobserved factors that affect the quality class of the $i_th$ observation.

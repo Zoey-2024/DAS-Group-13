@@ -16,4 +16,16 @@ execute:
   message: false
 ---
 
-## 
+## Library
+
+```{r}
+#| label: libraries
+library(ggplot2)
+library(readr)
+library(knitr)
+library(stringr)
+library(jtools)
+library(GGally)
+library(gridExtra)
+library(factoextra)
+```

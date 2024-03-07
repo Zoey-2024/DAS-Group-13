@@ -29,3 +29,19 @@ library(GGally)
 library(gridExtra)
 library(factoextra)
 ```
+
+##Wrangling of data
+
+```{r}
+data <- read.csv("dataset13.csv")
+
+str(data)
+summary(data)
+#Remove missing values
+data <- na.omit(data)
+data <- data[data$altitude_mean_meters <= 8848, ]
+str(data)
+#Convert Qualityclass category variables to 0, 1: Good=1, Poor=0
+data$Qualityclass_binary <- ifelse(data$Qualityclass == "Good", 1, 0)
+
+```

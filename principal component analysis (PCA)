@@ -19,17 +19,3 @@ variance_percentage <- variance / sum(variance) * 100
 plot(variance_percentage, type = "b", xlab = "Principal Component", ylab = "Percentage of Variance Explained", main = "Scree Plot")
 text(variance_percentage, labels = paste("PC", 1:length(variance_percentage)), pos = 4)
 ```
-
-```{r}
-## name pca1 as characteristics
-pca1 <- as.data.frame(pca_result$x[, 1])
-colnames(pca1) <- "characteristics"
-head(pca1)
-
-## Re-verify the correlation between the variables
-data1 <- cbind(characteristics = pca1, data[, 5:9])
-str(data1)
-ggpairs(data1[,1:4], 
-        title = "Scatterplot matrix of coffee data", 
-        mapping = aes(color = data1$Qualityclass))
-```

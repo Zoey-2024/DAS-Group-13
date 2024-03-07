@@ -6,3 +6,25 @@ editor: visual
 ---
 
 ## 
+
+
+
+## Data visualisation
+Plotting box plots of aroma, flavour and acidity.
+```{r}
+#Boxplot
+g1 <- ggplot(data = data, aes(x = Qualityclass, y = aroma, fill = Qualityclass)) +
+  geom_boxplot() +
+  labs(x = "Qualityclass", y = "Aroma")+ 
+  theme(legend.position = "none")
+g2 <- ggplot(data = data, aes(x = Qualityclass, y = flavor, fill = Qualityclass)) +
+  geom_boxplot() +
+  labs(x = "Qualityclass", y = "Flavor")+ 
+  theme(legend.position = "none")
+g3 <- ggplot(data = data, aes(x = Qualityclass, y = acidity, fill = Qualityclass)) +
+  geom_boxplot() +
+  labs(x = "Qualityclass", y = "Acidity")+ 
+  theme(legend.position = "none")
+grid.arrange(g1,g2,g3, ncol=3)
+```
+

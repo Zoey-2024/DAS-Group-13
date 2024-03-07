@@ -1,8 +1,47 @@
 ---
 title: "Group_13_Analysis"
 author: "Group13"
-format: html
-editor: visual
+number-sections: true
+format: 
+  html:
+    embed-resources: true
+    code-tools: true
+  pdf: default
+editor_options: 
+  chunk_output_type: console
+execute:
+  echo: true
+  eval: true
+  warning: false
+  message: false
 ---
 
-## 
+## Library
+
+```{r}
+#| label: libraries
+library(ggplot2)
+library(readr)
+library(knitr)
+library(stringr)
+library(jtools)
+library(GGally)
+library(gridExtra)
+library(factoextra)
+```
+
+##Wrangling of data
+
+```{r}
+data <- read.csv("dataset13.csv")
+
+str(data)
+summary(data)
+#Remove missing values
+data <- na.omit(data)
+data <- data[data$altitude_mean_meters <= 8848, ]
+str(data)
+#Convert Qualityclass category variables to 0, 1: Good=1, Poor=0
+data$Qualityclass_binary <- ifelse(data$Qualityclass == "Good", 1, 0)
+
+```

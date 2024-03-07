@@ -147,3 +147,8 @@ ggpairs(data1[,1:4],
         mapping = aes(color = data1$Qualityclass))
 ```
 Based on the scatterplot matrix, it can be seen that there is no multicollinearity in the newly merged dataset and binary logistic regression can be performed.
+
+$$characteristics_{\mbox{i}} =
+0.56 \cdot aroma_{\mbox{i}} +
+0.60 \cdot flavor_{\mbox{i}} - 0.57 \cdot acidity_{\mbox{i}}$$ 
+

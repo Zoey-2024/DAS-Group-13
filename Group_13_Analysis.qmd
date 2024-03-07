@@ -108,3 +108,42 @@ ggplot(data = cor_melt, aes(x=Var1, y=Var2, fill=value)) +
   labs(x='', y='', title='Correlation Matrix of Coffee Data Variables')
 ```
 
+Delete the outliers for the variables aroma, flavor and acidity.
+```{r}
+# delete Aroma == 0 
+data <- data[data$aroma != 0, ]
+data <- data[data$flavor != 0, ]
+data <- data[data$acidity != 0, ]
+```
+Due to the significant multicollinearity between these three variables, a principal component analysis was performed to obtain the loading matrix and the scree plot.
+```{r}
+#pca for aroma flavor acidity
+varable3 <- scale(data[, 2:4])
+pca_result <- prcomp(varable3, center = TRUE, scale. = TRUE)
+fviz_pca_ind(pca_result)
+
+# Explain the variance
+print(summary(pca_result))
+
+# Principal component loading
+print(pca_result$rotation)
+
+variance <- pca_result$sdev^2
+variance_percentage <- variance / sum(variance) * 100
+plot(variance_percentage, type = "b", xlab = "Principal Component", ylab = "Percentage of Variance Explained", main = "Scree Plot")
+text(variance_percentage, labels = paste("PC", 1:length(variance_percentage)), pos = 4)
+```
+According to the loading matrix, it can be seen that the first principal component explains 79.18% of these three variables, so the first principal component is selected as the variable of the model. It can be interpreted as the average of the three variables aroma, flavour, and acidity based on the score coefficient of the first principal component.
+```{r}
+## name pca1 as characteristics
+pca1 <- as.data.frame(pca_result$x[, 1])
+colnames(pca1) <- "characteristics"
+head(pca1)
+## Re-verify the correlation between the variables
+data1 <- cbind(characteristics = pca1, data[, 5:9])
+str(data1)
+ggpairs(data1[,1:4], 
+        title = "Scatterplot matrix of coffee data", 
+        mapping = aes(color = data1$Qualityclass))
+```
+Based on the scatterplot matrix, it can be seen that there is no multicollinearity in the newly merged dataset and binary logistic regression can be performed.

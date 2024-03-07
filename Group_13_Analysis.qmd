@@ -41,3 +41,16 @@ ggplot(data = data, aes(x = Qualityclass, y = altitude_mean_meters, fill = Quali
   theme(legend.position = "none")
 
 ```
+
+Check correlations, distribution and print correlation coefficient
+```{r}
+#| eval: true
+#scartterplot
+par(mfrow = c(1, 1))
+
+# Check correlations (as scatterplots), distribution and print correlation coefficient 
+ggpairs(data[,2:6], 
+        title = "Scatterplot matrix of coffee data", 
+        mapping = aes(color = data$Qualityclass))
+
+```

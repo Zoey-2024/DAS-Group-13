@@ -54,3 +54,21 @@ ggpairs(data[,2:6],
         mapping = aes(color = data$Qualityclass))
 
 ```
+
+Create a correlation matrix as heatmap
+```{r}
+numeric_vars <- data[,2:6]
+cor_matrix <- cor(numeric_vars)
+print(cor_matrix)
+
+cor_melt <- reshape2::melt(cor_matrix)
+# 
+ggplot(data = cor_melt, aes(x=Var1, y=Var2, fill=value)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
+                       midpoint = 0, limit = c(-1,1), space = "Lab", 
+                       name="Pearson\nCorrelation") +
+  theme_minimal() + 
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1)) +
+  labs(x='', y='', title='Correlation Matrix of Coffee Data Variables')
+```

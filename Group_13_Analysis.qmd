@@ -29,7 +29,7 @@ library(gridExtra)
 library(factoextra)
 ```
 
-##Wrangling of data
+## Wrangling of data
 
 ```{r}
 data <- read.csv("dataset13.csv")
@@ -152,3 +152,51 @@ $$characteristics_{\mbox{i}} =
 0.56 \cdot aroma_{\mbox{i}} +
 0.60 \cdot flavor_{\mbox{i}} - 0.57 \cdot acidity_{\mbox{i}}$$ 
 
+## Creating model
+
+```{r}
+#formula
+formula1 <- as.formula(paste("Qualityclass_binary ~", paste(names(data1)[1:4], collapse = "+")))
+
+# Fit model for the Qualityclass_binary
+logistic_model1 <- glm(formula1, data = data1, family = binomial)
+
+summary(logistic_model1)
+# Filter variables using stepwise regression
+stepwise_model <- step(logistic_model1)
+
+summary(stepwise_model)
+
+
+```
+
+```{r}
+model_deviance <- deviance(stepwise_model)
+null_deviance <- deviance(glm(Qualityclass_binary ~ 1, family = binomial, data = data1))
+# Calculate R_square
+R_square <- 1 - (model_deviance / null_deviance)
+R_square
+```
+
+```{r}
+# Output model results
+model_summary <- summary(stepwise_model)
+
+coefficients_table <- model_summary$coefficients
+
+write.csv(coefficients_table, "logistic_model_summary.csv", row.names = TRUE)
+
+```
+
+According to our analysis, we can get the model：
+$$ {Qualityclass\_binary}_i = \beta_0 + \beta_1 \cdot{characteristics}_i + \beta_2  \cdot{altitude\_mean\_meters}_i + \varepsilon_i $$
+
+where
+
+1. the intercept$\beta_0$ is the expected value of ${Qualityclass\_binary}_i$,when all independent variables are zero.
+
+2. $\beta_1  \cdot {characteristics}_i$ is This term represents the effect of the $i_th$observation's characteristics on the quality class.
+
+3. $\beta_2  \cdot {altitude\_mean\_meters}_i$ is the effect of the $i_th$ observation's average altitude (measured in meters) on the quality class.
+
+4. $\varepsilon_i$ is unobserved factors that affect the quality class of the $i_th$ observation.

@@ -28,3 +28,16 @@ g3 <- ggplot(data = data, aes(x = Qualityclass, y = acidity, fill = Qualityclass
 grid.arrange(g1,g2,g3, ncol=3)
 ```
 
+Plotting boxplots of Category_two_defects and Altitude_mean_meters.
+```{r}
+#Boxplot
+ggplot(data = data, aes(x = Qualityclass, y = category_two_defects, fill = Qualityclass)) +
+  geom_boxplot() +
+  labs(x = "Qualityclass", y = "Category_two_defects")+ 
+  theme(legend.position = "none")
+ggplot(data = data, aes(x = Qualityclass, y = altitude_mean_meters, fill = Qualityclass)) +
+  geom_boxplot() +
+  labs(x = "Qualityclass", y = "Altitude_mean_meters")+ 
+  theme(legend.position = "none")
+
+```

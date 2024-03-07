@@ -1,6 +1,6 @@
 ---
 title: "Group_13_Analysis"
-author: "Group13"
+author: "Shuyin Chen, Xuran Wang, Yingying Zhuo, Yunfei Chen, Yuxuan Li"
 number-sections: true
 format: 
   html:

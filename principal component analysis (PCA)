@@ -1,6 +1,9 @@
+```{r}
 ## delete Aroma == 0 
 data <- data[data$aroma != 0, ]
+```
 
+```{r}
 ## pca for aroma flavor acidity
 varable3 <- scale(data[, 2:4])
 pca_result <- prcomp(varable3, center = TRUE, scale. = TRUE)
@@ -15,7 +18,9 @@ variance <- pca_result$sdev^2
 variance_percentage <- variance / sum(variance) * 100
 plot(variance_percentage, type = "b", xlab = "Principal Component", ylab = "Percentage of Variance Explained", main = "Scree Plot")
 text(variance_percentage, labels = paste("PC", 1:length(variance_percentage)), pos = 4)
+```
 
+```{r}
 ## name pca1 as characteristics
 pca1 <- as.data.frame(pca_result$x[, 1])
 colnames(pca1) <- "characteristics"
@@ -27,3 +32,4 @@ str(data1)
 ggpairs(data1[,1:4], 
         title = "Scatterplot matrix of coffee data", 
         mapping = aes(color = data1$Qualityclass))
+```

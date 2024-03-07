@@ -15,7 +15,6 @@ execute:
   warning: false
   message: false
 ---
-
 ## Library
 
 ```{r}
@@ -45,3 +44,67 @@ str(data)
 data$Qualityclass_binary <- ifelse(data$Qualityclass == "Good", 1, 0)
 
 ```
+## Data visualisation
+Plotting box plots of aroma, flavour and acidity.
+```{r}
+#Boxplot
+g1 <- ggplot(data = data, aes(x = Qualityclass, y = aroma, fill = Qualityclass)) +
+  geom_boxplot() +
+  labs(x = "Qualityclass", y = "Aroma")+ 
+  theme(legend.position = "none")
+g2 <- ggplot(data = data, aes(x = Qualityclass, y = flavor, fill = Qualityclass)) +
+  geom_boxplot() +
+  labs(x = "Qualityclass", y = "Flavor")+ 
+  theme(legend.position = "none")
+g3 <- ggplot(data = data, aes(x = Qualityclass, y = acidity, fill = Qualityclass)) +
+  geom_boxplot() +
+  labs(x = "Qualityclass", y = "Acidity")+ 
+  theme(legend.position = "none")
+grid.arrange(g1,g2,g3, ncol=3)
+```
+
+Plotting boxplots of Category_two_defects and Altitude_mean_meters.
+```{r}
+#Boxplot
+ggplot(data = data, aes(x = Qualityclass, y = category_two_defects, fill = Qualityclass)) +
+  geom_boxplot() +
+  labs(x = "Qualityclass", y = "Category_two_defects")+ 
+  theme(legend.position = "none")
+ggplot(data = data, aes(x = Qualityclass, y = altitude_mean_meters, fill = Qualityclass)) +
+  geom_boxplot() +
+  labs(x = "Qualityclass", y = "Altitude_mean_meters")+ 
+  theme(legend.position = "none")
+
+```
+
+Check correlations, distribution and print correlation coefficient
+```{r}
+#| eval: true
+#scartterplot
+par(mfrow = c(1, 1))
+
+# Check correlations (as scatterplots), distribution and print correlation coefficient 
+ggpairs(data[,2:6], 
+        title = "Scatterplot matrix of coffee data", 
+        mapping = aes(color = data$Qualityclass))
+
+```
+
+Create a correlation matrix as heatmap
+```{r}
+numeric_vars <- data[,2:6]
+cor_matrix <- cor(numeric_vars)
+print(cor_matrix)
+
+cor_melt <- reshape2::melt(cor_matrix)
+# 
+ggplot(data = cor_melt, aes(x=Var1, y=Var2, fill=value)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
+                       midpoint = 0, limit = c(-1,1), space = "Lab", 
+                       name="Pearson\nCorrelation") +
+  theme_minimal() + 
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1)) +
+  labs(x='', y='', title='Correlation Matrix of Coffee Data Variables')
+```
+

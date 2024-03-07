@@ -1,15 +1,15 @@
-# delete Aroma == 0 https://github.com/Zoey-2024/DAS-Group-13/tree/Principal-Component-Analysis-(PCA)
+## delete Aroma == 0 
 data <- data[data$aroma != 0, ]
 
-#pca for aroma flavor acidity
+## pca for aroma flavor acidity
 varable3 <- scale(data[, 2:4])
 pca_result <- prcomp(varable3, center = TRUE, scale. = TRUE)
 fviz_pca_ind(pca_result)
 
-# Explain the variance
+##  Explain the variance
 print(summary(pca_result))
 
-# Principal component loading
+## Principal component loading
 print(pca_result$rotation)
 variance <- pca_result$sdev^2
 variance_percentage <- variance / sum(variance) * 100

@@ -29,7 +29,7 @@ library(gridExtra)
 library(factoextra)
 ```
 
-##Wrangling of data
+## Wrangling of data
 
 ```{r}
 data <- read.csv("dataset13.csv")
@@ -152,3 +152,20 @@ $$characteristics_{\mbox{i}} =
 0.56 \cdot aroma_{\mbox{i}} +
 0.60 \cdot flavor_{\mbox{i}} - 0.57 \cdot acidity_{\mbox{i}}$$ 
 
+## Creating model
+
+```{r}
+#formula
+formula1 <- as.formula(paste("Qualityclass_binary ~", paste(names(data1)[1:4], collapse = "+")))
+
+# Fit model for the Qualityclass_binary
+logistic_model1 <- glm(formula1, data = data1, family = binomial)
+
+summary(logistic_model1)
+# Filter variables using stepwise regression
+stepwise_model <- step(logistic_model1)
+
+summary(stepwise_model)
+
+
+```

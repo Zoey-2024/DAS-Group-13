@@ -169,3 +169,11 @@ summary(stepwise_model)
 
 
 ```
+
+```{r}
+model_deviance <- deviance(stepwise_model)
+null_deviance <- deviance(glm(Qualityclass_binary ~ 1, family = binomial, data = data1))
+# Calculate R_square
+R_square <- 1 - (model_deviance / null_deviance)
+R_square
+```

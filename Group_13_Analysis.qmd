@@ -1,8 +1,19 @@
 ---
 title: "Group_13_Analysis"
 author: "Group13"
-format: html
-editor: visual
+number-sections: true
+format: 
+  html:
+    embed-resources: true
+    code-tools: true
+  pdf: default
+editor_options: 
+  chunk_output_type: console
+execute:
+  echo: true
+  eval: true
+  warning: false
+  message: false
 ---
 
 ## 

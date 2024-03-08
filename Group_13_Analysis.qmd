@@ -21,6 +21,7 @@ execute:
 #| label: libraries
 library(ggplot2)
 library(readr)
+library(tidyverse)
 library(knitr)
 library(stringr)
 library(jtools)
@@ -222,3 +223,15 @@ where
 3. $\beta_2  \cdot {altitude\_mean\_meters}_i$ is the effect of the $i_th$ observation's average altitude (measured in meters) on the quality class.
 
 4. $\varepsilon_i$ is unobserved factors that affect the quality class of the $i_th$ observation.
+
+
+Finally, we can plot the probability of being Good as follows:
+
+```{r}
+data1 <- data1 %>%
+         mutate(probs.Good = fitted(stepwise_model))
+ggplot(data = data1, aes(x = characteristics, y = probs.Good)) +
+     geom_smooth(method="glm", method.args = list(family="binomial"), se = FALSE) +
+   labs(x = "characteristics", y = "Probability of coffee being Good")
+```
+

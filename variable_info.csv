@@ -1,0 +1,8 @@
+"variable_name","data_type"
+"characteristics","numeric"
+"category_two_defects","integer"
+"altitude_mean_meters","numeric"
+"harvested","factor"
+"country_of_origin","character"
+"Qualityclass","character"
+"Qualityclass_binary","numeric"

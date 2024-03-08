@@ -15,6 +15,7 @@ execute:
   warning: false
   message: false
 ---
+
 ## Library
 
 ```{r}
@@ -48,8 +49,11 @@ data$harvested <- as.factor(data$harvested)
 str(data)
 
 ```
+
 ## Data visualisation
+
 Plotting box plots of aroma, flavour and acidity.
+
 ```{r}
 #Boxplot
 g1 <- ggplot(data = data, aes(x = Qualityclass, y = aroma, fill = Qualityclass)) +
@@ -68,6 +72,7 @@ grid.arrange(g1,g2,g3, ncol=3)
 ```
 
 Plotting boxplots of Category_two_defects and Altitude_mean_meters.
+
 ```{r}
 #Boxplot
 ggplot(data = data, aes(x = Qualityclass, y = category_two_defects, fill = Qualityclass)) +
@@ -80,7 +85,9 @@ ggplot(data = data, aes(x = Qualityclass, y = altitude_mean_meters, fill = Quali
   theme(legend.position = "none")
 
 ```
+
 In order to investigate whether there is any relationship between coffee quality and the year of harvest, we draw a bar chart of the number of good and poor coffees in different years of harvest after turning the year of harvest into a categorical variable.
+
 ```{r}
 #barplot
 ggplot(data = data, aes(x = harvested, fill = Qualityclass)) +
@@ -88,9 +95,11 @@ ggplot(data = data, aes(x = harvested, fill = Qualityclass)) +
   labs(x = "Harvested", y = "Proportion") +
   theme(legend.position = "right")
 ```
+
 It is not obvious from the above graph that there is a clear relationship between the quality of coffee and the year of harvest.
 
 Check correlations, distribution and print correlation coefficient
+
 ```{r}
 #| eval: true
 #scartterplot
@@ -104,6 +113,7 @@ ggpairs(data[,2:6],
 ```
 
 Create a correlation matrix as heatmap
+
 ```{r}
 numeric_vars <- data[,2:6]
 cor_matrix <- cor(numeric_vars)
@@ -122,13 +132,16 @@ ggplot(data = cor_melt, aes(x=Var1, y=Var2, fill=value)) +
 ```
 
 Delete the outliers for the variables aroma, flavor and acidity.
+
 ```{r}
 # delete Aroma, flavor and acidity== 0 
 data <- data[data$aroma != 0, ]
 data <- data[data$flavor != 0, ]
 data <- data[data$acidity != 0, ]
 ```
+
 Due to the significant multicollinearity between these three variables, a principal component analysis was performed to obtain the loading matrix and the scree plot.
+
 ```{r}
 #pca for aroma flavor acidity
 varable3 <- scale(data[, 2:4])
@@ -146,7 +159,9 @@ variance_percentage <- variance / sum(variance) * 100
 plot(variance_percentage, type = "b", xlab = "Principal Component", ylab = "Percentage of Variance Explained", main = "Scree Plot")
 text(variance_percentage, labels = paste("PC", 1:length(variance_percentage)), pos = 4)
 ```
+
 According to the loading matrix, it can be seen that the first principal component explains 79.18% of these three variables, so the first principal component is selected as the variable of the model. It can be interpreted as the average of the three variables aroma, flavour, and acidity based on the score coefficient of the first principal component.
+
 ```{r}
 ## name pca1 as characteristics
 pca1 <- as.data.frame(pca_result$x[, 1])
@@ -171,11 +186,12 @@ ggpairs(data[,7:8],
         title = "Scatterplot of harvested", 
         mapping = aes(color = data$Qualityclass))
 ```
+
 Based on the scatterplot matrix, it can be seen that there is no multicollinearity in the newly merged dataset and binary logistic regression can be performed.
 
 $$characteristics_{\mbox{i}} =
 0.56 \cdot aroma_{\mbox{i}} +
-0.60 \cdot flavor_{\mbox{i}} - 0.57 \cdot acidity_{\mbox{i}}$$ 
+0.60 \cdot flavor_{\mbox{i}} - 0.57 \cdot acidity_{\mbox{i}}$$
 
 ## Creating model
 
@@ -213,29 +229,18 @@ write.csv(coefficients_table, "logistic_model_summary.csv", row.names = TRUE)
 
 According to our analysis, we can get the fitted model：
 
-$$ \ln\left(\frac{P({Qualityclass_binary}_i = 1)}{1 - P({Qualityclass_binary}_i = 1)}\right) = \alpha + \beta \cdot {characteristics}_i + \sum (\gamma_i \cdot {CountryVariables}_i) $$
+$$ \ln\left(\frac{P({Qualityclass_i} = 1)}{1 - P({Qualityclass_i} = 1)}\right) = \alpha + \beta \cdot {characteristics}_i + \sum (\gamma_j \cdot {CountryVariables}_{ij}) $$
 
 where
 
-1. ${Qualityclass_binary}_i$ is the response variable for the $i_th$ observation, indicating the quality classification of coffee.
+1.  ${Qualityclass_i}$ is the response variable for the $i_{th}$ observation, indicating the quality classification of coffee. ${Qualityclass_i}=1$ means coffee's quality is good.
 
-2. $\alpha$ is the baseline log-odds when all explanatory variables are equal to zero. 
+2.  $\alpha$ is the baseline log-odds when all explanatory variables are equal to zero.
 
-3. $\beta$ is the coefficient for the characteristics feature. It indicates the impact of this feature on the log-odds of coffee quality being good. 
+3.  $\beta$ is the coefficient for the characteristics feature. It indicates the impact of this feature on the log-odds of coffee quality being good.
 
-4. ${characteristics}_i$ is the main characteristic derived from PCA analysis for the $i_th$ observation.
+4.  ${characteristics}_i$ is the main characteristic derived from PCA analysis for the $i_{th}$ observation.
 
-5. $\gamma_i$ is the impact of specific countries of origin on coffee quality.
+5.  $\gamma_j$ is the impact of specific $j_th$ countries of origin on coffee quality.
 
-6. ${CountryVariables}_i$ are dummy variables for the country of origin for the $i_th$ observation.
-
-Finally, we can plot the probability of being Good as follows:
-
-```{r}
-data1 <- data1 %>%
-         mutate(probs.Good = fitted(stepwise_model))
-ggplot(data = data1, aes(x = characteristics, y = probs.Good)) +
-     geom_smooth(method="glm", method.args = list(family="binomial"), se = FALSE) +
-   labs(x = "characteristics", y = "Probability of coffee being Good")
-```
-
+6.  ${CountryVariables}_{ij}$ are dummy variables for the $j_th$ country of origin for the $i_{th}$ observation.

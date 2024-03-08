@@ -83,9 +83,9 @@ In order to investigate whether there is any relationship between coffee quality
 ```{r}
 #barplot
 ggplot(data = data, aes(x = harvested, fill = Qualityclass)) +
-  geom_bar() +
-  labs(x = "Harvested", y = "Frequency") +
-  theme(legend.position = "none")
+  geom_bar(position="dodge",stat="count") +
+  labs(x = "Harvested", y = "Proportion") +
+  theme(legend.position = "right")
 ```
 It is not obvious from the above graph that there is a clear relationship between the quality of coffee and the year of harvest.
 

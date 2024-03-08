@@ -42,6 +42,9 @@ data <- data[data$altitude_mean_meters <= 8848, ]
 str(data)
 #Convert Qualityclass category variables to 0, 1: Good=1, Poor=0
 data$Qualityclass_binary <- ifelse(data$Qualityclass == "Good", 1, 0)
+#Treat harvested as a category variable
+data$harvested <- as.factor(data$harvested)
+str(data)
 
 ```
 ## Data visualisation
@@ -110,7 +113,7 @@ ggplot(data = cor_melt, aes(x=Var1, y=Var2, fill=value)) +
 
 Delete the outliers for the variables aroma, flavor and acidity.
 ```{r}
-# delete Aroma == 0 
+# delete Aroma, flavor and acidity== 0 
 data <- data[data$aroma != 0, ]
 data <- data[data$flavor != 0, ]
 data <- data[data$acidity != 0, ]
@@ -140,9 +143,9 @@ pca1 <- as.data.frame(pca_result$x[, 1])
 colnames(pca1) <- "characteristics"
 head(pca1)
 ## Re-verify the correlation between the variables
-data1 <- cbind(characteristics = pca1, data[, 5:9])
+data1 <- cbind(characteristics = pca1, data[, c(5:7,1,8:9)])
 str(data1)
-ggpairs(data1[,1:4], 
+ggpairs(data1[,1:3], 
         title = "Scatterplot matrix of coffee data", 
         mapping = aes(color = data1$Qualityclass))
 ```
@@ -166,8 +169,6 @@ summary(logistic_model1)
 stepwise_model <- step(logistic_model1)
 
 summary(stepwise_model)
-
-
 ```
 
 ```{r}

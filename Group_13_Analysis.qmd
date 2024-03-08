@@ -16,7 +16,7 @@ execute:
   message: false
 ---
 
-## Library
+# Library
 
 ```{r}
 #| label: libraries
@@ -31,7 +31,7 @@ library(gridExtra)
 library(factoextra)
 ```
 
-## Wrangling of data
+# Wrangling of data
 
 ```{r}
 data <- read.csv("dataset13.csv")
@@ -50,7 +50,7 @@ str(data)
 
 ```
 
-## Data visualisation
+# Data visualisation
 
 Plotting box plots of aroma, flavour and acidity.
 
@@ -120,7 +120,6 @@ cor_matrix <- cor(numeric_vars)
 print(cor_matrix)
 
 cor_melt <- reshape2::melt(cor_matrix)
-# 
 ggplot(data = cor_melt, aes(x=Var1, y=Var2, fill=value)) +
   geom_tile() +
   scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
@@ -193,7 +192,7 @@ $$characteristics_{\mbox{i}} =
 0.56 \cdot aroma_{\mbox{i}} +
 0.60 \cdot flavor_{\mbox{i}} - 0.57 \cdot acidity_{\mbox{i}}$$
 
-## Creating model
+# Creating model
 
 ```{r}
 #formula

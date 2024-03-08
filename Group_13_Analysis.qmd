@@ -180,7 +180,7 @@ $$characteristics_{\mbox{i}} =
 
 ```{r}
 #formula
-formula1 <- as.formula(paste("Qualityclass_binary ~", paste(names(data1)[1:4], collapse = "+")))
+formula1 <- as.formula(paste("Qualityclass_binary ~", paste(names(data1)[1:5], collapse = "+")))
 
 # Fit model for the Qualityclass_binary
 logistic_model1 <- glm(formula1, data = data1, family = binomial)

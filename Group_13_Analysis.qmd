@@ -139,8 +139,8 @@ data <- data[data$flavor != 0, ]
 data <- data[data$acidity != 0, ]
 ```
 
+# PCA
 Due to the significant multicollinearity between these three variables, a principal component analysis was performed to obtain the loading matrix and the scree plot.
-
 ```{r}
 #pca for aroma flavor acidity
 varable3 <- scale(data[, 2:4])

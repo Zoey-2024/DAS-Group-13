@@ -79,6 +79,15 @@ ggplot(data = data, aes(x = Qualityclass, y = altitude_mean_meters, fill = Quali
   theme(legend.position = "none")
 
 ```
+In order to investigate whether there is any relationship between coffee quality and the year of harvest, we draw a bar chart of the number of good and poor coffees in different years of harvest after turning the year of harvest into a categorical variable.
+```{r}
+#barplot
+ggplot(data = data, aes(x = harvested, fill = Qualityclass)) +
+  geom_bar() +
+  labs(x = "Harvested", y = "Frequency") +
+  theme(legend.position = "none")
+```
+It is not obvious from the above graph that there is a clear relationship between the quality of coffee and the year of harvest.
 
 Check correlations, distribution and print correlation coefficient
 ```{r}
@@ -155,6 +164,11 @@ variable_info <- data.frame(variable_name = names(data1),
 ggpairs(data1[,1:3], 
         title = "Scatterplot matrix of coffee data", 
         mapping = aes(color = data1$Qualityclass))
+
+# create scatterplot of harvested(after changing into categorical variables)
+ggpairs(data[,7:8],
+        title = "Scatterplot of harvested", 
+        mapping = aes(color = data$Qualityclass))
 ```
 Based on the scatterplot matrix, it can be seen that there is no multicollinearity in the newly merged dataset and binary logistic regression can be performed.
 

@@ -204,7 +204,7 @@ Based on the scatterplot matrix, it can be seen that there is no multicollineari
 
 $$characteristics_{\mbox{i}} =
 0.56 \cdot aroma_{\mbox{i}} +
-0.60 \cdot flavor_{\mbox{i}} - 0.57 \cdot acidity_{\mbox{i}}$$
+0.60 \cdot flavor_{\mbox{i}} + 0.57 \cdot acidity_{\mbox{i}}$$
 
 # Creating model
 

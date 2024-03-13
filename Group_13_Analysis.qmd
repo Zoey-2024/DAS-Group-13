@@ -38,12 +38,12 @@ data <- read.csv("dataset13.csv")
 
 str(data)
 summary(data)
-# Remove missing values
+#Remove missing values
 data <- na.omit(data)
-# Delete data with an altitude greater than 8848 (world's highest point at 8848m).
+#Delete data with an altitude greater than 8848 (world's highest point at 8848m).
 data <- data[data$altitude_mean_meters <= 8848, ]
 str(data)
-# Convert Qualityclass category variables to 0, 1: Good=1, Poor=0
+#Convert Qualityclass category variables to 0, 1: Good=1, Poor=0
 data$Qualityclass_binary <- ifelse(data$Qualityclass == "Good", 1, 0)
 #Treat harvested as a category variable
 data$harvested <- as.factor(data$harvested)
@@ -56,7 +56,7 @@ str(data)
 Plotting boxplots of aroma, flavour and acidity.
 
 ```{r}
-# Create boxplots to see the basic structure of the data
+#Create boxplots to see the basic structure of the data
 g1 <- ggplot(data = data, aes(x = Qualityclass, y = aroma, fill = Qualityclass)) +
   geom_boxplot() +
   labs(x = "Qualityclass", y = "Aroma")+ 
@@ -93,7 +93,7 @@ ggplot(data = data, aes(x = Qualityclass, y = altitude_mean_meters, fill = Quali
 In order to investigate whether there is any relationship between coffee quality and the year of harvest, we draw a bar chart of the number of good and poor coffees in different years of harvest after turning the year of harvest into a categorical variable.
 
 ```{r}
-# Creating a barplot of havests to see the distributional characteristics of harvest years
+#Creating a barplot of havests to see the distributional characteristics of harvest years
 ggplot(data = data, aes(x = harvested, fill = Qualityclass)) +
   geom_bar(position="dodge",stat="count") +
   labs(x = "Harvested", y = "Proportion") +
@@ -109,7 +109,7 @@ Check correlations, distribution and print correlation coefficient
 #scartterplot
 par(mfrow = c(1, 1))
 
-# Check correlations (as scatterplots), distribution and print correlation coefficient 
+#Check correlations (as scatterplots), distribution and print correlation coefficient 
 ggpairs(data[,2:6], 
         title = "Scatterplot matrix of coffee data", 
         mapping = aes(color = data$Qualityclass))
@@ -119,13 +119,13 @@ ggpairs(data[,2:6],
 Create a correlation matrix as heatmap
 
 ```{r}
-# Create a heat map based on the correlation matrix of the variables to see 
- if multicollinearity exists
-# Calculate the correlation matrix for numerical variables
+#Create a heat map based on the correlation matrix of the variables to see 
+#-if multicollinearity exists
+#Calculate the correlation matrix for numerical variables
 numeric_vars <- data[,2:6]
 cor_matrix <- cor(numeric_vars)
 print(cor_matrix)
-# Create the heat map
+#Create the heat map
 cor_melt <- reshape2::melt(cor_matrix)
 ggplot(data = cor_melt, aes(x=Var1, y=Var2, fill=value)) +
   geom_tile() +
@@ -140,7 +140,7 @@ ggplot(data = cor_melt, aes(x=Var1, y=Var2, fill=value)) +
 Delete the outliers for the variables aroma, flavor and acidity.
 
 ```{r}
-# delete Aroma, flavor and acidity== 0 
+#delete Aroma, flavor and acidity== 0 
 data <- data[data$aroma != 0, ]
 data <- data[data$flavor != 0, ]
 data <- data[data$acidity != 0, ]
@@ -151,20 +151,20 @@ data <- data[data$acidity != 0, ]
 Due to the significant multicollinearity between these three variables, a principal component analysis was performed to obtain the loading matrix and the scree plot.
 
 ```{r}
-# pca for aroma flavor acidity
+#pca for aroma flavor acidity
 varable3 <- scale(data[, 2:4])
 pca_result <- prcomp(varable3, center = TRUE, scale. = TRUE)
 fviz_pca_ind(pca_result)
 
-# Explain the variance
+#Explain the variance
 print(summary(pca_result))
-# The first principal component explains 79.18% of the variance
+#The first principal component explains 79.18% of the variance
 
-# Principal component loading
+#Principal component loading
 print(pca_result$rotation)
-# The loadings of three variables in the first principal component are nearly equal,
-  so the first principal component can be interpreted as the average level of acidity,
-  flavor and aroma of the coffee. 
+#The loadings of three variables in the first principal component are nearly equal,
+#-so the first principal component can be interpreted as the average level of acidity,
+#-flavor and aroma of the coffee. 
 
 variance <- pca_result$sdev^2
 variance_percentage <- variance / sum(variance) * 100
@@ -175,15 +175,15 @@ text(variance_percentage, labels = paste("PC", 1:length(variance_percentage)), p
 According to the loading matrix, it can be seen that the first principal component explains 79.18% of these three variables, so the first principal component is selected as the variable of the model. It can be interpreted as the average of the three variables aroma, flavour, and acidity based on the score coefficient of the first principal component.
 
 ```{r}
-# Name pca1 as characteristics
+#Name pca1 as characteristics
 pca1 <- as.data.frame(pca_result$x[, 1])
 colnames(pca1) <- "characteristics"
 head(pca1)
-# Re-verify the correlation between the variables
+#Re-verify the correlation between the variables
 data1 <- cbind(characteristics = pca1, data[, c(5:7,1,8:9)])
 str(data1)
 
-# Export Variable names and types for the Variables
+#Export Variable names and types for the Variables
 variable_info <- data.frame(variable_name = names(data1), 
                             data_type = sapply(data1, class), row.names = NULL)
 
@@ -193,7 +193,7 @@ ggpairs(data1[,1:3],
         title = "Scatterplot matrix of coffee data", 
         mapping = aes(color = data1$Qualityclass))
 
-# Create scatterplot of harvested(after changing into categorical variables)
+#Create scatterplot of harvested(after changing into categorical variables)
 ggpairs(data[,7:8],
         title = "Scatterplot of harvested", 
         mapping = aes(color = data$Qualityclass))
@@ -208,16 +208,16 @@ $$characteristics_{\mbox{i}} =
 # Creating model
 
 ```{r}
-# Create the formula
+#Create the formula
 formula1 <- as.formula(paste("Qualityclass_binary ~", 
                        paste(names(data1)[1:5], 
                        collapse = "+")))
 
-# Fit model for the Qualityclass_binary
+#Fit model for the Qualityclass_binary
 logistic_model1 <- glm(formula1, data = data1, family = binomial)
 
 summary(logistic_model1)
-# Filter variables using stepwise regression
+#Filter variables using stepwise regression
 stepwise_model <- step(logistic_model1)
 
 summary(stepwise_model)
@@ -228,13 +228,13 @@ model_deviance <- deviance(stepwise_model)
 null_deviance <- deviance(glm(Qualityclass_binary ~ 1, 
                           family = binomial, 
                           data = data1))
-# Calculate R_square
+#Calculate R_square
 R_square <- 1 - (model_deviance / null_deviance)
 R_square
 ```
 
 ```{r}
-# Output model results
+#Output model results
 model_summary <- summary(stepwise_model)
 
 coefficients_table <- model_summary$coefficients

@@ -168,7 +168,8 @@ print(pca_result$rotation)
 
 variance <- pca_result$sdev^2
 variance_percentage <- variance / sum(variance) * 100
-plot(variance_percentage, type = "b", xlab = "Principal Component", ylab = "Percentage of Variance Explained", main = "Scree Plot")
+plot(variance_percentage, type = "b", xlab = "Principal Component", 
+     ylab = "Percentage of Variance Explained", main = "Scree Plot")
 text(variance_percentage, labels = paste("PC", 1:length(variance_percentage)), pos = 4)
 ```
 
